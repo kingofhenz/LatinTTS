@@ -10,7 +10,7 @@ def clean_latin(text):
 def make_classical_phonetics(text):
     """
     Swaps ecclesiastical Latin spelling for classical phonetics 
-    in memory
+    (ONLY in memory)
     """
     phonetic = text.lower()
     phonetic = phonetic.replace('v', 'w')
@@ -25,16 +25,12 @@ def make_classical_phonetics(text):
 def change_speed(audio, speed=1.0):
     """
     Changes the speed of the audio by modifying the frame rate.
-    Note: Lowering the speed with native pydub will also lower the pitch, 
-    making the voice sound a bit deeper.
+    Note: Lowering the speed with pydub will also lower the pitch
     """
-    # Calculate the new frame rate based on the target speed multiplier
     new_sample_rate = int(audio.frame_rate * speed)
     
-    # Apply the new sample rate, keeping the original frame rate metadata to stretch the audio
     slowed_audio = audio._spawn(audio.raw_data, overrides={'frame_rate': new_sample_rate})
     
-    # Set it back to standard frame rate so it plays back slower
     return slowed_audio.set_frame_rate(audio.frame_rate)
 
 # Load file
@@ -50,14 +46,14 @@ chunk_size = 50
 for i in range(0, len(df), chunk_size):
     chunk = df.iloc[i:i + chunk_size]
     
-    # Initialize an empty container for this chunk
+    # Initialize an empty container 
     combined_audio = AudioSegment.empty()
     chunk_index = i // chunk_size + 1
     
     print(f"\n--- Processing Chunk {chunk_index} (Words {i+1} to {min(i+chunk_size, len(df))}) ---")
     
     for index, row in chunk.iterrows():
-        # Pull data based on your CSV's column names
+        # Pull data from CSV
         latin_word = clean_latin(row.get('PRINCIPAL PARTS', ''))
         definition = str(row.get('DEFINITION', '')).strip()
         
@@ -68,7 +64,7 @@ for i in range(0, len(df), chunk_size):
         print(f" Reading: {latin_word}")
         
         try:
-            # 1a. Convert to classical phonetics only in memory
+            # 1a. Convert to classical phonetics in memory
             phonetic_latin = make_classical_phonetics(latin_word)
             
             # 1b. Generate Latin Audio into memory 
@@ -97,7 +93,7 @@ for i in range(0, len(df), chunk_size):
         except Exception as e:
             print(f" -> Error reading '{latin_word}': {e}")
             
-    # Export directly as WAV
+    # Export  as WAV
     output_filename_wav = f"vocab_part_{chunk_index}.wav"
     print(f"Exporting {output_filename_wav}...")
     combined_audio.export(output_filename_wav, format="wav")
