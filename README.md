@@ -1,3 +1,5 @@
+# WARNING
+Project is in early developement and hasnt been ran on any OS other than linux. Please create issues on github as you notice them
 # Latin Vocabulary Audio Generator
 
 Turns a Latin vocabulary CSV into spoken-word study audio then stitches the results into one file.
@@ -43,13 +45,14 @@ Does the same job as `LINUXstitcher.py` — combines your `vocab_part_N.wav` fil
 
 3. You'll end up with one compressed audio file ready to load onto a phone or player.
 
-## customization
+## Customization
 
 changing this will change the speed on the LATIN ONLY:
 
  ```bash
    audio_la = change_speed(audio_la, speed=0.95)
    ```
+
 Changing these will change the pause interval after each latin and english word, both times are in milliseconds
 
  ```bash
