@@ -2,7 +2,6 @@ import os
 import subprocess
 
 def parse_user_input(user_input):
-    """Parses inputs like '1, 2, 4-6' into a list of integers: [1, 2, 4, 5, 6]"""
     parts = set()
     try:
         for item in user_input.split(','):
@@ -19,8 +18,7 @@ def parse_user_input(user_input):
 
 def stitch_to_native_aac(file_list, output_filename="master.m4a"):
     """
-    Uses FFmpeg's native built-in AAC encoder. This avoids requiring 
-    external codec libraries (like libmp3lame or libopus).
+    Uses FFmpeg's native built-in encoder. This avoids requiring external codec libraries (like libmp3lame or libopus).
     """
     # Filter out files that don't exist
     valid_files = [f for f in file_list if os.path.exists(f)]
@@ -29,7 +27,6 @@ def stitch_to_native_aac(file_list, output_filename="master.m4a"):
         print("No valid files found to stitch. Please check your part numbers.")
         return
 
-    # FFmpeg's concat demuxer requires a text file listing all the inputs
     list_filename = "concat_list.txt"
     with open(list_filename, 'w') as f:
         for file in valid_files:
@@ -52,7 +49,7 @@ def stitch_to_native_aac(file_list, output_filename="master.m4a"):
     ]
 
     try:
-        # Run FFmpeg
+        
         result = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
         
         if result.returncode == 0:
